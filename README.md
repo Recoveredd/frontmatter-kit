@@ -179,6 +179,17 @@ hasFrontmatter("---\ntitle: Hi\n---\nBody");
 // true
 ```
 
+### `stripFrontmatter(source, options?)`
+
+Returns only the document body. If the source has no front matter, the original document is returned.
+
+```ts
+import { stripFrontmatter } from "frontmatter-kit";
+
+stripFrontmatter("---\ntitle: Notes\n---\n# Body");
+// "# Body"
+```
+
 ### `stringifyFrontmatter(attributes, body?, options?)`
 
 Serializes a small metadata object back to a front matter document. This is meant for simple

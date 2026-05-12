@@ -4,6 +4,7 @@ import {
   hasFrontmatter,
   parseFrontmatter,
   parseFrontmatterOrThrow,
+  stripFrontmatter,
   stringifyFrontmatter,
   tryParseFrontmatter
 } from "../src/index.js";
@@ -142,6 +143,14 @@ Rest`, { excerptSeparator: false });
   it("detects front matter markers", () => {
     expect(hasFrontmatter("---\ntitle: Hi\n---\nBody")).toBe(true);
     expect(hasFrontmatter("# No marker")).toBe(false);
+  });
+
+  it("strips front matter and returns the document body", () => {
+    expect(stripFrontmatter(`---
+title: Notes
+---
+# Body`)).toBe("# Body");
+    expect(stripFrontmatter("# Plain document")).toBe("# Plain document");
   });
 
   it("wraps unexpected errors in tryParseFrontmatter", () => {

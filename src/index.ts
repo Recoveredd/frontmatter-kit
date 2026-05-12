@@ -168,6 +168,10 @@ export function hasFrontmatter(source: string): boolean {
   return Boolean(readOpening(source));
 }
 
+export function stripFrontmatter(source: string, options?: FrontmatterParseOptions): string {
+  return parseFrontmatter(source, options).body;
+}
+
 interface Opening {
   start: number;
   contentStart: number;
