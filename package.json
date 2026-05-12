@@ -1,0 +1,57 @@
+{
+  "name": "frontmatter-kit",
+  "version": "0.1.0",
+  "description": "Parse and inspect front matter with typed metadata, body ranges and readable diagnostics.",
+  "type": "module",
+  "sideEffects": false,
+  "license": "MPL-2.0",
+  "author": "Recoveredd",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Recoveredd/frontmatter-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Recoveredd/frontmatter-kit/issues"
+  },
+  "homepage": "https://github.com/Recoveredd/frontmatter-kit#readme",
+  "keywords": [
+    "frontmatter",
+    "front-matter",
+    "markdown",
+    "yaml",
+    "toml",
+    "json",
+    "parser",
+    "typescript"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepack": "npm run build",
+    "test": "vitest run --config vitest.config.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.8"
+  }
+}
