@@ -10,7 +10,7 @@ Parse and inspect front matter with typed metadata, body ranges and readable dia
 `attributes + body`. It parses front matter, exposes line/column ranges, reports malformed
 delimiters and metadata errors, and keeps the result easy to render in previews or docs dashboards.
 
-Links: [npm](https://www.npmjs.com/package/frontmatter-kit) · [GitHub](https://github.com/Recoveredd/frontmatter-kit)
+Links: [Demo](https://packages.wasta-wocket.fr/frontmatter-kit/) · [npm](https://www.npmjs.com/package/frontmatter-kit) · [GitHub](https://github.com/Recoveredd/frontmatter-kit)
 
 `frontmatter-kit` is intentionally not a drop-in replacement for every front matter package. It is
 best for tools that need to inspect content, explain what was parsed, and show users where metadata
