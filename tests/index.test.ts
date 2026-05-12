@@ -72,6 +72,17 @@ Body`);
     });
   });
 
+  it("warns about unknown language hints", () => {
+    const result = parseFrontmatter(`---weird
+title: Fallback
+---
+Body`);
+
+    expect(result.language).toBe("yaml");
+    expect(result.attributes).toEqual({ title: "Fallback" });
+    expect(result.diagnostics[0]?.code).toBe("UNKNOWN_LANGUAGE_HINT");
+  });
+
   it("returns the entire document as body when no front matter is present", () => {
     const result = parseFrontmatter("# Plain document");
 
@@ -153,7 +164,7 @@ Body`);
 
   it("serializes TOML front matter", () => {
     expect(stringifyFrontmatter({ title: "Hello", draft: false }, "Body", { language: "toml" })).toBe(`+++toml
-title = Hello
+title = "Hello"
 draft = false
 +++
 Body`);

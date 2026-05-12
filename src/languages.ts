@@ -227,14 +227,26 @@ function stringifyToml(attributes: FrontmatterAttributes): string {
     if (value && typeof value === "object" && !Array.isArray(value)) {
       lines.push(`[${key}]`);
       for (const [childKey, childValue] of Object.entries(value)) {
-        lines.push(`${childKey} = ${stringifyScalar(childValue)}`);
+        lines.push(`${childKey} = ${stringifyTomlScalar(childValue)}`);
       }
     } else {
-      lines.push(`${key} = ${stringifyScalar(value)}`);
+      lines.push(`${key} = ${stringifyTomlScalar(value)}`);
     }
   }
 
   return lines.join("\n");
+}
+
+function stringifyTomlScalar(value: FrontmatterValue): string {
+  if (typeof value === "string") {
+    return JSON.stringify(value);
+  }
+
+  if (Array.isArray(value)) {
+    return `[${value.map(stringifyTomlScalar).join(", ")}]`;
+  }
+
+  return stringifyScalar(value);
 }
 
 function setPathValue(target: FrontmatterAttributes, path: string, value: FrontmatterValue): void {

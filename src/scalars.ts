@@ -2,20 +2,21 @@ import type { FrontmatterDiagnostic, FrontmatterRange, FrontmatterValue } from "
 
 export function parseScalar(value: string, diagnostics: FrontmatterDiagnostic[], range?: FrontmatterRange): FrontmatterValue {
   const trimmed = value.trim();
+  const lower = trimmed.toLowerCase();
 
   if (trimmed === "") {
     return "";
   }
 
-  if (trimmed === "true") {
+  if (lower === "true") {
     return true;
   }
 
-  if (trimmed === "false") {
+  if (lower === "false") {
     return false;
   }
 
-  if (trimmed === "null" || trimmed === "~") {
+  if (lower === "null" || trimmed === "~") {
     return null;
   }
 

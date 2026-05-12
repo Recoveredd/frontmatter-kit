@@ -55,6 +55,15 @@ export function parseFrontmatter<TAttributes extends FrontmatterAttributes = Fro
   const closing = findClosing(source, opening.contentStart, opening.delimiter);
   const openingRange = rangeAt(opening.start, opening.contentStart, lineStarts);
 
+  if (opening.rawLanguageHint && !opening.languageHint) {
+    diagnostics.push({
+      code: "UNKNOWN_LANGUAGE_HINT",
+      severity: "warning",
+      message: `Unknown front matter language "${opening.rawLanguageHint}"; YAML-like parsing was used.`,
+      range: openingRange
+    });
+  }
+
   if (!closing) {
     diagnostics.push({
       code: "MISSING_CLOSING_DELIMITER",
@@ -99,7 +108,7 @@ export function parseFrontmatter<TAttributes extends FrontmatterAttributes = Fro
       opening: opening.delimiter,
       closing: opening.delimiter
     },
-    excerpt: excerpt?.text,
+    ...(excerpt ? { excerpt: excerpt.text } : {}),
     ranges: {
       opening: openingRange,
       matter: matterRange,
@@ -164,6 +173,7 @@ interface Opening {
   contentStart: number;
   delimiter: "---" | "+++";
   languageHint?: FrontmatterLanguage;
+  rawLanguageHint?: string;
 }
 
 interface Closing {
@@ -180,12 +190,14 @@ function readOpening(source: string): Opening | undefined {
 
   const delimiter = match[1] as "---" | "+++";
   const hint = normalizeLanguage(match[2]);
+  const rawHint = match[2]?.trim();
 
   return {
     start: 0,
     contentStart: match[0].length,
     delimiter,
-    ...(hint ? { languageHint: hint } : {})
+    ...(hint ? { languageHint: hint } : {}),
+    ...(rawHint ? { rawLanguageHint: rawHint } : {})
   };
 }
 
@@ -230,15 +242,17 @@ function inferLanguage(opening: Opening, matter: string, forced?: FrontmatterLan
 }
 
 function normalizeLanguage(value: string | undefined): FrontmatterLanguage | undefined {
-  if (value === "yaml" || value === "yml") {
+  const normalized = value?.toLowerCase();
+
+  if (normalized === "yaml" || normalized === "yml") {
     return "yaml";
   }
 
-  if (value === "json") {
+  if (normalized === "json") {
     return "json";
   }
 
-  if (value === "toml") {
+  if (normalized === "toml") {
     return "toml";
   }
 

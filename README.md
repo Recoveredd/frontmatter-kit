@@ -12,6 +12,10 @@ delimiters and metadata errors, and keeps the result easy to render in previews 
 
 Links: [npm](https://www.npmjs.com/package/frontmatter-kit) · [GitHub](https://github.com/Recoveredd/frontmatter-kit)
 
+`frontmatter-kit` is intentionally not a drop-in replacement for every front matter package. It is
+best for tools that need to inspect content, explain what was parsed, and show users where metadata
+starts, ends or fails.
+
 ## Package quality
 
 - TypeScript types are generated from the source.
@@ -76,11 +80,15 @@ or content QA tool and need:
 | `---` | YAML-like key/value front matter |
 | `---yaml` / `---yml` | YAML-like key/value front matter |
 | `---json` | JSON object front matter |
-| `+++` / `+++toml` | TOML-like key/value front matter |
+| `---toml` | TOML-like key/value front matter with dash delimiters |
+| `+++` / `+++toml` | TOML-like key/value front matter with plus delimiters |
 
 The YAML and TOML parsers are intentionally small. They cover common metadata shapes: strings,
 numbers, booleans, nulls, inline arrays, simple nested objects and simple lists. They are designed
 for content metadata, not for full YAML or TOML language coverage.
+
+Unknown hints such as `---data` are parsed as YAML-like metadata and reported with an
+`UNKNOWN_LANGUAGE_HINT` warning.
 
 ## API
 
@@ -122,6 +130,10 @@ type FrontmatterResult = {
 };
 ```
 
+`hasFrontmatter` is `true` only when a complete opening marker, metadata block and closing marker
+were found. A document with an opening marker but no closing marker stays inspectable, but returns
+`hasFrontmatter: false` with a `MISSING_CLOSING_DELIMITER` diagnostic.
+
 Options:
 
 | Option | Default | Description |
@@ -142,7 +154,9 @@ const result = parseFrontmatterOrThrow(source);
 
 ### `tryParseFrontmatter(source, options?)`
 
-Wraps unexpected runtime errors in a result object.
+Wraps unexpected runtime errors in a result object. Metadata syntax problems still appear in
+`result.diagnostics`, because `parseFrontmatter()` is designed to keep malformed documents
+inspectable.
 
 ```ts
 import { tryParseFrontmatter } from "frontmatter-kit";
@@ -167,7 +181,8 @@ hasFrontmatter("---\ntitle: Hi\n---\nBody");
 
 ### `stringifyFrontmatter(attributes, body?, options?)`
 
-Serializes a small metadata object back to a front matter document.
+Serializes a small metadata object back to a front matter document. This is meant for simple
+metadata objects, not as a full YAML/TOML emitter.
 
 ```ts
 import { stringifyFrontmatter } from "frontmatter-kit";
@@ -190,10 +205,22 @@ result.diagnostics;
 Each diagnostic can include a line/column range so editors and playgrounds can highlight the
 problem directly.
 
+Common diagnostic codes:
+
+| Code | Severity | Meaning |
+| --- | --- | --- |
+| `MISSING_CLOSING_DELIMITER` | `error` | The opening marker exists but no matching closing marker was found. |
+| `INVALID_JSON_FRONTMATTER` | `error` | JSON metadata could not be parsed. |
+| `JSON_FRONTMATTER_NOT_OBJECT` | `error` | JSON metadata parsed, but did not produce an object. |
+| `UNKNOWN_LANGUAGE_HINT` | `warning` | The marker had an unsupported language hint, so YAML-like parsing was used. |
+| `INVALID_YAML_LINE` | `warning` | A YAML-like line was ignored because it was not a key/value pair. |
+| `INVALID_TOML_LINE` | `warning` | A TOML-like line was ignored because it was not a key/value pair. |
+
 ## Notes
 
 - This package does not execute code and does not load external resources.
 - The YAML/TOML support is intentionally pragmatic rather than exhaustive.
+- Use `gray-matter` if you need a broad compatibility parser for many legacy front matter shapes.
 - The implementation is clean-room and does not copy code from `front-matter`, `gray-matter` or
   related packages.
 
