@@ -21,6 +21,7 @@ starts, ends or fails.
 - TypeScript types are generated from the source.
 - ESM-only package with no runtime dependencies.
 - Marked as side-effect free for bundlers.
+- CI runs `npm ci`, `typecheck`, `build`, and `test`.
 - Tested on Node.js 20 and 22 with GitHub Actions.
 - Works in Node.js, browsers, Vite apps and static docs tooling.
 
