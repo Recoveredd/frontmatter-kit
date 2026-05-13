@@ -2,6 +2,16 @@
   "name": "frontmatter-kit",
   "version": "0.1.1",
   "description": "Parse and inspect front matter with typed metadata, body ranges and readable diagnostics.",
+  "keywords": [
+    "frontmatter",
+    "front-matter",
+    "markdown",
+    "yaml",
+    "toml",
+    "parser",
+    "typescript",
+    "developer-tools"
+  ],
   "type": "module",
   "sideEffects": false,
   "license": "MPL-2.0",
@@ -14,16 +24,6 @@
     "url": "https://github.com/Recoveredd/frontmatter-kit/issues"
   },
   "homepage": "https://github.com/Recoveredd/frontmatter-kit#readme",
-  "keywords": [
-    "frontmatter",
-    "front-matter",
-    "markdown",
-    "yaml",
-    "toml",
-    "json",
-    "parser",
-    "typescript"
-  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
